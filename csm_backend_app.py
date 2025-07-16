@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 load_dotenv() # This will load variables from your .env file
 
 # API Configuration - Centralized for easy management
-API_BASE = os.getenv("API_BASE", "http://localhost:8008")
+API_BASE = os.getenv("API_BASE", "http://localhost:4444")
 API_KEY = os.getenv("RM_API_KEY")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
@@ -184,28 +184,35 @@ def setup_tab():
             logger.warning("Setup attempted without Customer ID or operation.")
             return
 
+        # with st.spinner("Validating path and fetching customer data..."):
+        #     ds_root = f"F:/qpilot_prod/qpilot_v1_{customer_id}/DS"
+        #     if not os.path.exists(ds_root):
+        #         st.error(f"Repository path does not exist: {ds_root}")
+        #         logger.error(f"Path validation failed: {ds_root}")
+        #         return
+
+        #     sections_path = os.path.join(ds_root, "sections.json")
+        #     if not os.path.exists(sections_path):
+        #         st.error("sections.json not found in the specified DS_ROOT.")
+        #         logger.error(f"sections.json missing at {sections_path}")
+        #         return
+
+        #     with open(sections_path, "r") as f:
+        #         sections_data = json.load(f)
+        #     customer_name = sections_data[0].get("customer_name")
+
+        #     if not customer_name:
+        #         st.error("customer_name not found in sections.json.")
+        #         logger.error("customer_name missing in sections.json")
+        #         return
         with st.spinner("Validating path and fetching customer data..."):
-            ds_root = f"F:/qpilot_prod/qpilot_v1_{customer_id}/DS"
-            if not os.path.exists(ds_root):
-                st.error(f"Repository path does not exist: {ds_root}")
-                logger.error(f"Path validation failed: {ds_root}")
+            validate_resp = make_api_request("post", "validate_path", data={"customer_id": customer_id})
+            if not validate_resp:
                 return
 
-            sections_path = os.path.join(ds_root, "sections.json")
-            if not os.path.exists(sections_path):
-                st.error("sections.json not found in the specified DS_ROOT.")
-                logger.error(f"sections.json missing at {sections_path}")
-                return
-
-            with open(sections_path, "r") as f:
-                sections_data = json.load(f)
-            customer_name = sections_data[0].get("customer_name")
-
-            if not customer_name:
-                st.error("customer_name not found in sections.json.")
-                logger.error("customer_name missing in sections.json")
-                return
-
+            ds_root = validate_resp["ds_root"]
+            customer_name = validate_resp["customer_name"]
+        
             account_response = make_api_request("post", "accountnames", data={"customer_id": customer_id})
             if not account_response or not account_response.get("accounts"):
                 st.error("No accounts found for this customer ID or failed to fetch them.")

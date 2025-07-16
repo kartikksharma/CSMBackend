@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 load_dotenv() # This will load variables from your .env file
 
 # API Configuration - Centralized for easy management
-API_BASE = os.getenv("API_BASE", "http://localhost:4444")
+API_BASE = os.getenv("API_BASE", "http://localhost:8008")
 API_KEY = os.getenv("RM_API_KEY")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 

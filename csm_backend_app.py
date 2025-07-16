@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 load_dotenv() # This will load variables from your .env file
 
 # API Configuration - Centralized for easy management
-API_BASE = os.getenv("API_BASE", "http://localhost:8008")
+API_BASE = os.getenv("API_BASE")
 API_KEY = os.getenv("RM_API_KEY")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
@@ -120,8 +120,8 @@ st.markdown("""
 
 /* --- ACTIVE TAB --- */
 .stTabs [aria-selected="true"] {
-    color: #007BFF;                      /* accent color         */
-    border-bottom: 2px solid #007BFF;    /* accent underline     */
+    color: #29d40f;                      /* accent color         */
+    border-bottom: 2px solid #29d40f;    /* accent underline     */
     background: transparent;             /* keep background clear*/
 }
 </style>

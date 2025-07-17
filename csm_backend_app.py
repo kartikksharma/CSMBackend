@@ -78,75 +78,55 @@ st.set_page_config(
 # """, unsafe_allow_html=True)
 st.markdown("""
 <style>
-/* --- FORCE LIGHT MODE --- */
-html, body, .stApp {
-    background-color: white !important;
-    color: black !important;
-}
+/* --- GLOBAL APP COLORS (unchanged) --- */
+.stApp { background-color: white; color: black; }
 
-/* --- GLOBAL ACCENT COLOR OVERRIDE --- */
-a, .css-1cpxqw2, .stButton>button, .css-1n76uvr, .stCheckbox>div>label>div:first-child {
-    color: #00c951 !important;
-    border-color: #00c951 !important;
-    background-color: #00c951 !important;
-}
-
-/* --- BUTTON STYLES --- */
+/* --- BUTTONS & INPUTS (unchanged) --- */
 .stButton>button {
-    background-color: #00c951 !important;
-    color: white !important;
-    border: 1px solid #00c951 !important;
+    background-color: #007BFF;
+    color: white;
     border-radius: 8px;
+    border: 1px solid #007BFF;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-.stButton>button:hover {
-    background-color: #00b048 !important;
-    border-color: #00b048 !important;
+.stButton>button:hover { background-color: #0056b3; border-color: #0056b3; }
+.stSelectbox, .stTextInput, .stNumberInput, .stFileUploader {
+    background-color: #f8f9fa;
+    border-radius: 8px;
 }
 
-/* --- INPUT STYLES --- */
-.stTextInput>div>div>input,
-.stSelectbox>div>div>div>div,
-.stNumberInput input,
-.stFileUploader>div>div {
-    background-color: white !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
-    border-radius: 6px;
-}
-
-/* --- TABS --- */
+/* --- TAB LIST --- */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 16px;
-    border-bottom: 1px solid #ececec;
+    gap: 16px;               /* smaller gap                 */
+    border-bottom: 1px solid #ececec;  /* faint baseline */
     padding-bottom: 2px;
 }
 
+/* --- INDIVIDUAL TABS --- */
 .stTabs [data-baseweb="tab"] {
-    background: transparent;
-    border: none;
+    background: transparent; /* no box                       */
+    border: none;            /* remove border                */
     padding: 0 4px;
     height: 42px;
-    color: #555 !important;
+    color: #555;
     font-weight: 500;
-    border-bottom: 2px solid transparent;
+    border-bottom: 2px solid transparent; /* invisible underline */
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 .stTabs [data-baseweb="tab"]:hover {
-    color: #000 !important;
-    border-bottom: 2px solid #ccc;
-}
-.stTabs [aria-selected="true"] {
-    color: #00c951 !important;
-    border-bottom: 2px solid #00c951 !important;
+    color: #000;
+    border-bottom: 2px solid #ddd;     /* subtle hover line     */
 }
 
-/* --- REMOVE DARK THEME OVERRIDES (if any) --- */
-[data-testid="stAppViewContainer"] {
-    background-color: white !important;
+/* --- ACTIVE TAB --- */
+.stTabs [aria-selected="true"] {
+    color: #29d40f;                      /* accent color         */
+    border-bottom: 2px solid #29d40f;    /* accent underline     */
+    background: transparent;             /* keep background clear*/
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # --- Session State Initialization ---

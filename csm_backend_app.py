@@ -78,55 +78,75 @@ st.set_page_config(
 # """, unsafe_allow_html=True)
 st.markdown("""
 <style>
-/* --- GLOBAL APP COLORS (unchanged) --- */
-.stApp { background-color: white; color: black; }
+/* --- FORCE LIGHT MODE --- */
+html, body, .stApp {
+    background-color: white !important;
+    color: black !important;
+}
 
-/* --- BUTTONS & INPUTS (unchanged) --- */
+/* --- GLOBAL ACCENT COLOR OVERRIDE --- */
+a, .css-1cpxqw2, .stButton>button, .css-1n76uvr, .stCheckbox>div>label>div:first-child {
+    color: #00c951 !important;
+    border-color: #00c951 !important;
+    background-color: #00c951 !important;
+}
+
+/* --- BUTTON STYLES --- */
 .stButton>button {
-    background-color: #007BFF;
-    color: white;
+    background-color: #00c951 !important;
+    color: white !important;
+    border: 1px solid #00c951 !important;
     border-radius: 8px;
-    border: 1px solid #007BFF;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-.stButton>button:hover { background-color: #0056b3; border-color: #0056b3; }
-.stSelectbox, .stTextInput, .stNumberInput, .stFileUploader {
-    background-color: #f8f9fa;
-    border-radius: 8px;
+.stButton>button:hover {
+    background-color: #00b048 !important;
+    border-color: #00b048 !important;
 }
 
-/* --- TAB LIST --- */
+/* --- INPUT STYLES --- */
+.stTextInput>div>div>input,
+.stSelectbox>div>div>div>div,
+.stNumberInput input,
+.stFileUploader>div>div {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px;
+}
+
+/* --- TABS --- */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 16px;               /* smaller gap                 */
-    border-bottom: 1px solid #ececec;  /* faint baseline */
+    gap: 16px;
+    border-bottom: 1px solid #ececec;
     padding-bottom: 2px;
 }
 
-/* --- INDIVIDUAL TABS --- */
 .stTabs [data-baseweb="tab"] {
-    background: transparent; /* no box                       */
-    border: none;            /* remove border                */
+    background: transparent;
+    border: none;
     padding: 0 4px;
     height: 42px;
-    color: #555;
+    color: #555 !important;
     font-weight: 500;
-    border-bottom: 2px solid transparent; /* invisible underline */
+    border-bottom: 2px solid transparent;
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 .stTabs [data-baseweb="tab"]:hover {
-    color: #000;
-    border-bottom: 2px solid #ddd;     /* subtle hover line     */
+    color: #000 !important;
+    border-bottom: 2px solid #ccc;
+}
+.stTabs [aria-selected="true"] {
+    color: #00c951 !important;
+    border-bottom: 2px solid #00c951 !important;
 }
 
-/* --- ACTIVE TAB --- */
-.stTabs [aria-selected="true"] {
-    color: #29d40f;                      /* accent color         */
-    border-bottom: 2px solid #29d40f;    /* accent underline     */
-    background: transparent;             /* keep background clear*/
+/* --- REMOVE DARK THEME OVERRIDES (if any) --- */
+[data-testid="stAppViewContainer"] {
+    background-color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 # --- Session State Initialization ---

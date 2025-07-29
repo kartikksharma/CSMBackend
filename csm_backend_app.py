@@ -343,7 +343,6 @@ def contacts_tab():
                     st.success("New contacts uploaded successfully.")
                     logger.info(f"Contacts uploaded for account: {account}")
 
-
 def offerings_tab():
     """Renders the UI for downloading product offerings."""
     st.header("Download Product Offerings")
@@ -373,6 +372,77 @@ def offerings_tab():
                 st.error(f"Failed to download product offerings: {e}")
                 logger.error(f"Download failed: {e}")
 
+import time
+
+def refresh_config_tab():
+    """Provides a UI to re-run config generation after initial setup."""
+    st.header("Refresh Config")
+    is_disabled = not st.session_state.setup_complete
+
+    if is_disabled:
+        st.info("Please complete the 'Initial Setup' tab first to enable this section.")
+        return
+
+    st.write("Click the button below to update config files with the latest product offerings.")
+
+    if st.button("Re-run Config Generation", disabled=is_disabled):
+        with st.spinner("Triggering config generation..."):
+            response = make_api_request("post", "refreshconfig", data={"customer_id": st.session_state['customer_id']})
+
+        if not response:
+            st.error("Failed to start config generation.")
+            return
+
+        st.success("Launching script and monitoring progress...")
+
+        # UI placeholders
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        last_updated_display = st.empty()
+        error_display = st.empty()
+
+        # Poll backend every 2 seconds for up to 7 minutes
+        for _ in range(210):
+            time.sleep(2)
+
+            status_response = make_api_request(
+                "get", "config_status",
+                params={"customer_id": st.session_state["customer_id"]}
+            )
+
+            if not status_response:
+                status_text.warning("Unable to fetch progress.")
+                continue
+
+            progress = status_response.get("progress", 0.0)
+            raw_status = status_response.get("status", "")
+            last_updated = status_response.get("last_updated")
+            error_line = status_response.get("error")
+
+            # Friendly status substitution
+            if raw_status.lower().startswith("starting"):
+                status = "Content loaded from DB. Generation has started."
+            else:
+                status = raw_status
+
+            progress_bar.progress(progress)
+            status_text.write(f"Status: **{status}**")
+
+            if last_updated:
+                last_updated_display.caption(f"Last updated: {last_updated}")
+
+            if error_line:
+                error_display.error(f"Error: {error_line}")
+                break
+
+            if status.lower() in ("completed", "done"):
+                st.success("Configuration completed successfully.")
+                break
+
+        else:
+            st.warning("Config generation timed out after 7 minutes. It may have stalled or encountered an untracked error.")
+
+
 # --- Main Application Logic ---
 def main():
     """The main function that orchestrates the Streamlit app."""
@@ -389,9 +459,10 @@ def main():
         "Upload Feedback",
         "Update Ranks",
         "Manage Contacts",
-        "Product Offerings"
+        "Product Offerings",
+        "Refresh Config"
     ]
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(tab_titles)
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(tab_titles)
 
     with tab1:
         setup_tab()
@@ -403,6 +474,9 @@ def main():
         contacts_tab()
     with tab5:
         offerings_tab()
+    with tab6:
+        refresh_config_tab()
+
 
 
 if __name__ == "__main__":
